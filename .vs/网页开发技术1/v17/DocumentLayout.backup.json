@@ -1,0 +1,121 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "T:\\Git Hub\\arknights-website1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|t:\\git hub\\arknights-website1\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|solutionrelative:wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|t:\\git hub\\arknights-website1\\wwwroot\\js\\slider.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|solutionrelative:wwwroot\\js\\slider.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|t:\\git hub\\arknights-website1\\wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|solutionrelative:wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|t:\\git hub\\arknights-website1\\wwwroot\\characters.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|solutionrelative:wwwroot\\characters.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|t:\\git hub\\arknights-website1\\wwwroot\\download.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|solutionrelative:wwwroot\\download.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|t:\\git hub\\arknights-website1\\wwwroot\\news.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B5A85811-1FC2-4BEE-9FFB-A7379F196ADF}|\u7F51\u9875\u5F00\u53D1\u6280\u672F1.csproj|solutionrelative:wwwroot\\news.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "slider.js",
+              "DocumentMoniker": "T:\\Git Hub\\arknights-website1\\wwwroot\\js\\slider.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\slider.js",
+              "ToolTip": "T:\\Git Hub\\arknights-website1\\wwwroot\\js\\slider.js",
+              "RelativeToolTip": "wwwroot\\js\\slider.js",
+              "ViewState": "AgIAACIAAAAAAAAAAAA5wGcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-05-26T08:47:36.764Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "download.html",
+              "DocumentMoniker": "T:\\Git Hub\\arknights-website1\\wwwroot\\download.html",
+              "RelativeDocumentMoniker": "wwwroot\\download.html",
+              "ToolTip": "T:\\Git Hub\\arknights-website1\\wwwroot\\download.html",
+              "RelativeToolTip": "wwwroot\\download.html",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACAAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-05-26T07:46:18.774Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "news.html",
+              "DocumentMoniker": "T:\\Git Hub\\arknights-website1\\wwwroot\\news.html",
+              "RelativeDocumentMoniker": "wwwroot\\news.html",
+              "ToolTip": "T:\\Git Hub\\arknights-website1\\wwwroot\\news.html",
+              "RelativeToolTip": "wwwroot\\news.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-05-26T07:46:06.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "style.css",
+              "DocumentMoniker": "T:\\Git Hub\\arknights-website1\\wwwroot\\css\\style.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\style.css",
+              "ToolTip": "T:\\Git Hub\\arknights-website1\\wwwroot\\css\\style.css",
+              "RelativeToolTip": "wwwroot\\css\\style.css",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAGgAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-05-26T07:41:43.099Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "characters.html",
+              "DocumentMoniker": "T:\\Git Hub\\arknights-website1\\wwwroot\\characters.html",
+              "RelativeDocumentMoniker": "wwwroot\\characters.html",
+              "ToolTip": "T:\\Git Hub\\arknights-website1\\wwwroot\\characters.html",
+              "RelativeToolTip": "wwwroot\\characters.html",
+              "ViewState": "AgIAAO0BAAAAAAAAAAAAAIsCAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-05-26T07:37:07.153Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "index.html",
+              "DocumentMoniker": "T:\\Git Hub\\arknights-website1\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "wwwroot\\index.html",
+              "ToolTip": "T:\\Git Hub\\arknights-website1\\wwwroot\\index.html",
+              "RelativeToolTip": "wwwroot\\index.html",
+              "ViewState": "AgIAAIYCAAAAAAAAAAAAAL0CAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-05-26T04:53:30.352Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

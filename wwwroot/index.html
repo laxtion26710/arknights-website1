@@ -1,0 +1,961 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明日方舟 - 重铸未来，方舟启航</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式 */
+        :root {
+            --primary-color: #f5a623;
+            --secondary-color: #4682B4;
+            --dark-bg: #0a1a2f;
+            --card-bg: rgba(30, 50, 80, 0.6);
+            --text-light: #ffffff;
+            --text-secondary: #a0c0e0;
+            --transition: all 0.4s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a1a2f 0%, #1a2b4f 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        /* 导航栏样式 */
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(0, 0, 0, 0.85);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+            .logo img:hover {
+                transform: scale(1.05);
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+            .nav-links a {
+                color: var(--text-light);
+                text-decoration: none;
+                font-size: 1.1rem;
+                font-weight: 500;
+                padding: 8px 12px;
+                border-radius: 4px;
+                transition: var(--transition);
+                position: relative;
+            }
+
+                .nav-links a:hover {
+                    color: var(--primary-color);
+                }
+
+                .nav-links a.active {
+                    color: var(--primary-color);
+                    background: rgba(245, 166, 35, 0.1);
+                }
+
+                .nav-links a::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -5px;
+                    left: 0;
+                    width: 0;
+                    height: 2px;
+                    background: var(--primary-color);
+                    transition: width 0.3s ease;
+                }
+
+                .nav-links a:hover::after,
+                .nav-links a.active::after {
+                    width: 100%;
+                }
+
+        /* 页面容器 */
+        .page-container {
+            max-width: 1600px;
+            margin: 100px auto 50px;
+            padding: 0 5%;
+        }
+
+        /* 轮播图核心样式 - 用于首页和角色页 */
+        .slider-container {
+            position: relative;
+            margin-top: 20px;
+            height: 70vh;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+        }
+
+        .slider {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .slide-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            overflow: hidden;
+        }
+
+            .slide-item.active {
+                opacity: 1;
+                z-index: 2;
+            }
+
+            .slide-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                transition: transform 0.5s ease;
+            }
+
+            .slide-item.active img {
+                transform: scale(1.03);
+            }
+
+        /* 角色名称样式 */
+        .character-info {
+            position: absolute;
+            bottom: 60px;
+            right: 60px;
+            color: white;
+            text-align: right;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            max-width: 500px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+
+        .slide-item.active .character-info {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .character-info h2 {
+            font-size: 3.5rem;
+            margin: 0;
+            line-height: 1.1;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+        }
+
+        .character-info .en-name {
+            font-size: 1.8rem;
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .character-info .role {
+            font-size: 1.3rem;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: rgba(245, 166, 35, 0.2);
+            display: inline-block;
+            border-radius: 30px;
+        }
+
+        /* 指示器样式 */
+        .indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 300;
+        }
+
+        .indicator {
+            width: 14px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .indicator.active {
+                background: var(--primary-color);
+                transform: scale(1.3);
+                box-shadow: 0 0 10px rgba(245, 166, 35, 0.8);
+            }
+
+            .indicator:hover {
+                background: rgba(255, 255, 255, 0.8);
+                transform: scale(1.2);
+            }
+
+        /* 左右箭头样式 */
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+            .arrow:hover {
+                background: rgba(245, 166, 35, 0.8);
+                transform: translateY(-50%) scale(1.1);
+                opacity: 1 !important;
+            }
+
+        .slider-container:hover .arrow {
+            opacity: 0.7;
+        }
+
+        .arrow.prev {
+            left: 30px;
+        }
+
+        .arrow.next {
+            right: 30px;
+        }
+
+        /* 特色内容区域 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 50px 0;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-15px);
+                background: rgba(40, 70, 110, 0.8);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            }
+
+            .feature-card i {
+                font-size: 3rem;
+                color: var(--primary-color);
+                margin-bottom: 20px;
+            }
+
+            .feature-card h3 {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+                color: var(--primary-color);
+            }
+
+            .feature-card p {
+                font-size: 1.1rem;
+                color: var(--text-secondary);
+                flex-grow: 1;
+            }
+
+        /* 下载区域样式 */
+        .download-section {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .download-box {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+            .download-box h2 {
+                font-size: 2.5rem;
+                margin-bottom: 30px;
+                color: var(--primary-color);
+            }
+
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(245, 166, 35, 0.2);
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+            .download-btn:hover {
+                background: rgba(245, 166, 35, 0.4);
+                transform: translateY(-5px);
+            }
+
+            .download-btn i {
+                margin-right: 10px;
+                font-size: 1.5rem;
+            }
+
+        /* 新闻区域样式 */
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 50px 0;
+        }
+
+        .news-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+            .news-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            }
+
+        .news-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .news-content {
+            padding: 25px;
+        }
+
+        .news-date {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .news-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .news-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+            .read-more:hover {
+                color: var(--text-light);
+            }
+
+        /* 页脚样式 */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+            footer p {
+                margin: 10px 0;
+            }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+            .social-links a {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 45px;
+                height: 45px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                color: var(--text-light);
+                font-size: 1.2rem;
+                transition: var(--transition);
+            }
+
+                .social-links a:hover {
+                    background: var(--primary-color);
+                    transform: translateY(-5px);
+                }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .slider-container {
+                height: 60vh;
+            }
+
+            .character-info h2 {
+                font-size: 2.8rem;
+            }
+
+            .character-info .en-name {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slider-container {
+                height: 50vh;
+                margin-top: 80px;
+            }
+
+            .character-info {
+                bottom: 30px;
+                right: 30px;
+                padding: 15px;
+            }
+
+                .character-info h2 {
+                    font-size: 2.2rem;
+                }
+
+                .character-info .en-name {
+                    font-size: 1.2rem;
+                }
+
+                .character-info .role {
+                    font-size: 1rem;
+                    padding: 6px 12px;
+                }
+
+            .arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 22px;
+            }
+
+            .features, .news-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+                .nav-links a {
+                    font-size: 0.95rem;
+                    padding: 6px 8px;
+                }
+        }
+
+        @media (max-width: 576px) {
+            .slider-container {
+                height: 40vh;
+            }
+
+            .character-info {
+                bottom: 20px;
+                right: 20px;
+                max-width: 80%;
+            }
+
+                .character-info h2 {
+                    font-size: 1.8rem;
+                }
+
+                .character-info .en-name {
+                    font-size: 1rem;
+                }
+
+            .indicators {
+                bottom: 15px;
+            }
+
+            .arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .logo img {
+                height: 40px;
+            }
+        }
+
+        /* 页面切换动画 */
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+            .page.active {
+                display: block;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="main-nav">
+        <div class="logo">
+            <img src="images/团队logo_无团队.png"alt="明日方舟">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active" data-page="home">首页</a></li>
+            <li><a href="#" data-page="characters">角色</a></li>
+            <li><a href="#" data-page="news">资讯</a></li>
+            <li><a href="#" data-page="download">下载</a></li>
+        </ul>
+    </nav>
+
+    <!-- 页面容器 -->
+    <div class="page-container">
+        <!-- 首页 -->
+        <div class="page active" id="home-page">
+            <div class="slider-container">
+                <div class="slider">
+                    <!-- 第一张轮播图 -->
+                    <div class="slide-item active">
+                        <img src="images/Avg_58_mini04.png" alt="明日方舟">
+                        <div class="character-info">
+                            <h2>重铸未来</h2>
+                            <div class="en-name">Rebuilding the Future</div>
+                            <div class="role">方舟启航</div>
+                        </div>
+                    </div>
+
+                    <!-- 第二张轮播图 -->
+                    <div class="slide-item">
+                        <img src="images/Avg_60_i18.png" alt="回眸">
+                        <div class="character-info">
+                            <h2>回眸</h2>
+                            <div class="en-name">Glance back</div>
+                            <div class="role">希望仍在</div>
+                        </div>
+                    </div>
+
+                    <!-- 第三张轮播图 -->
+                    <div class="slide-item">
+                        <img src="images/Avg_60_i03.png" alt="聚首">
+                        <div class="character-info">
+                            <h2>聚首</h2>
+                            <div class="en-name">Gather</div>
+                            <div class="role">她从未离去</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="indicators"></div>
+                <button class="arrow prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="arrow next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <!-- 首页特色内容 -->
+            <section class="features">
+                <div class="feature-card">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>游戏介绍</h3>
+                    <p>《明日方舟》是一款魔物主题的策略手游。在游戏中，玩家将作为罗德岛的领导者"博士"，带领干员们，进入神秘危险的地区，救助受难人群，处理矿石争端，以及对抗未知阻碍。</p>
+                </div>
+
+                <div class="feature-card">
+                    <i class="fas fa-book"></i>
+                    <h3>世界观</h3>
+                    <p>游戏背景设定在一个架空世界"泰拉"，这里充斥着源石引发以及其引发的的自然灾害"天灾"。源石催生了"感染者"的存在，他们具有特殊能力却备受歧视。罗德岛则致力于寻找治愈感染者的方法。</p>
+                </div>
+
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>角色系统</h3>
+                    <p>游戏中有数百位独特的干员，每位干员都有自己独特的背景故事和技能组合。玩家需要根据战场情况合理部署干员，制定战术策略，才能成功完成各种挑战。</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- 角色页面 -->
+        <div class="page" id="characters-page">
+            <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">干员档案</h1>
+
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>纯烬艾雅法拉</h3>
+                    <p>艾雅法拉，火山学家，天灾信使。现于罗德岛接受治疗，同时为罗德岛提供天灾研究、环境观察与评估、危险地形航行保障等相关服务，并视需求参与包括天灾研究在内的多项活动。</p>
+                    <div style="margin-top: 20px; width: 100%;">
+                        <video width="100%" autoplay loop muted playsinline style="border-radius: 10px;">
+                            <source src="characters1/%e7%ba%af%e7%83%ac%e8%89%be%e9%9b%85%e6%b3%95%e6%8b%89-%e9%bb%98%e8%ae%a4-%e5%9f%ba%e5%bb%ba-Interact-x1.webm" type="audio/webm" />
+                        </video>
+                    </div>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>焰影苇草</h3>
+                <p>苇草，近期再次成功与罗德岛建立联络。目前正以深池名义带领小股部队在维多利亚境内活动，以救助被暴力胁迫的塔拉人为主要行动目标。她承认了自己是塔拉的红龙，她被那些小小的理想照亮。</p>
+                <div style="margin-top: 20px; width: 100%;">
+                    <video width="100%" autoplay loop muted playsinline style="border-radius: 10px;">
+                        <source src="characters1/%e7%84%b0%e5%bd%b1%e8%8b%87%e8%8d%89-%e5%8d%9a%e7%89%a9-%e6%ad%a3%e9%9d%a2-Idle-x1.webm" type="audio/webm" />
+                    </video>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>Mon3tr</h3>
+                <p>Mon3tr，在生命科学、矿石病诊疗、历史系谱学等诸多领域具备渊博学识，拥有丰富的移动作战经验，为罗德岛重建工作提供了至关重要的帮助，现为罗德岛医疗部、工程部、外勤部特别顾问。</p>
+                <div style="margin-top: 20px; width: 100%;">
+                    <video width="100%" autoplay loop muted playsinline style="border-radius: 10px;">
+                        <source src="characters1/Mon3tr-%e9%bb%98%e8%ae%a4-%e5%9f%ba%e5%bb%ba-Move-x1.webm" type="audio/webm" />
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 资讯页面 -->
+                            <div class="page" id="news-page">
+                                <h1 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">最新资讯</h1>
+
+                                <div class="news-container">
+                                    <div class="news-card">
+                                        <img src="新文件夹/cfa2ff4a58411a2d0bcde52259f75f71.jpg" alt="活动更新" class="news-image">
+                                        <div class="news-content">
+                                            <div class="news-date">2025-05-15</div>
+                                            <h3 class="news-title">「矢量突破」限时活动</h3>
+                                            <p class="news-excerpt">玩家可通过活动关卡作战获取“小心地滑”，提升突破里程碑等级获取相应活动奖励</p>
+                                            <a href="#" class="read-more">阅读更多 <i class="fas fa-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="news-card">
+                                        <img src="新文件夹/8ff7e66c1ef9206ba79f0d86aa10d92f (1).jpg" alt="干员更新" class="news-image">
+                                        <div class="news-content">
+                                            <div class="news-date">2025-05-01</div>
+                                            <h3 class="news-title">「六周年庆典」，SideStory「众生行记」活动限时开启</h3>
+                                            <p class="news-excerpt">活动期间将开放「众生行记」活动关卡，玩家可通过活动关卡作战、制铳师之夜、活动任务及活动商店兑换获取相关活动奖励</p>
+                                            <a href="#" class="read-more">阅读更多 <i class="fas fa-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="news-card">
+                                        <img src="新文件夹/f42cab6d3a0f8b90d762dce03edd396a.jpg" alt="主题曲更新" class="news-image">
+                                        <div class="news-content">
+                                            <div class="news-date">2025-04-07</div>
+                                            <h3 class="news-title">主题曲EP15「离解复合」开放</h3>
+                                            <p class="news-excerpt">主题曲EP15「离解复合」开放，04月07日 16:00 - 04月21日 03:59期间，玩家可通过活动关卡作战、制铳师之夜、活动任务及活动商店兑换获取相关活动奖励</p>
+                                            <a href="#" class="read-more">阅读更多 <i class="fas fa-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="news-card">
+                                        <img src="新文件夹/活动预告_促融共竞01_01.jpg" alt="活动更新" class="news-image">
+                                        <div class="news-content">
+                                            <div class="news-date">2025-03-20</div>
+                                            <h3 class="news-title">促融共竞#1限时活动开启</h3>
+                                            <p class="news-excerpt">活动期间，玩家可通过参与联机活动关卡、完成共竞里程及每日活跃任务获取「参赛认证-S1」，提升「赛事热度」等级获取相应活动奖励；此外，玩家还可在选手影集中收集活动合照获取相应奖励</p>
+                                            <a href="#" class="read-more">阅读更多 <i class="fas fa-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 下载页面 -->
+                            <div class="page" id="download-page">
+                                <div class="download-section">
+                                    <div class="download-box">
+                                        <h2><i class="fas fa-download"></i> 下载明日方舟</h2>
+                                        <p>立即下载《明日方舟》，加入罗德岛，开启你的泰拉世界冒险之旅！</p>
+
+                                        <div class="download-options">
+                                            <a href="#" class="download-btn">
+                                                <i class="fab fa-android"></i> Android下载
+                                            </a>
+                                            <a href="#" class="download-btn">
+                                                <i class="fab fa-apple"></i> iOS下载
+                                            </a>
+                                        </div>
+
+                                        <div style="margin-top: 40px;">
+                                            <h3>系统要求</h3>
+                                            <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
+                                                <div>
+                                                    <h4><i class="fas fa-mobile-alt"></i> 移动设备</h4>
+                                                    <p>Android 6.0 或更高版本</p>
+                                                    <p>iOS 12.0 或更高版本</p>
+                                                    <p>至少 4GB RAM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <section class="features">
+                                    <div class="feature-card">
+                                        <i class="fas fa-sync-alt"></i>
+                                        <h3>版本更新</h3>
+                                        <p>当前最新版本：v2.5.60</p>
+                                    </div>
+
+                                    <div class="feature-card">
+                                        <i class="fas fa-file-download"></i>
+                                        <h3>安装指南</h3>
+                                        <p>下载完成后，按照安装向导提示完成安装。首次启动游戏需下载约10GB资源包。</p>
+                                    </div>
+
+                                    <div class="feature-card">
+                                        <i class="fas fa-headset"></i>
+                                        <h3>客服支持</h3>
+                                        <p>遇到任何问题？请联系我们的客服团队为您提供技术支持。</p>
+                                    </div>
+                                </section>
+                            </div>
+</div>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>明日方舟 - 重铸未来，方舟启航</p>
+        <p>© 2017-2025 Hypergryph Network Technology Co., Ltd. All Rights Reserved.</p>
+        <p>本网站为粉丝作品，与官方无关</p>
+
+        <div class="social-links">
+            <a href="#"><i class="fab fa-weibo"></i></a>
+            <a href="#"><i class="fab fa-qq"></i></a>
+            <a href="#"><i class="fab fa-bilibili"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // ========== 页面切换逻辑 ==========
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // 更新导航栏活动状态
+                document.querySelectorAll('.nav-links a').forEach(a => {
+                    a.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                // 隐藏所有页面
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+
+                // 显示目标页面
+                const targetPage = this.getAttribute('data-page');
+                document.getElementById(`${targetPage}-page`).classList.add('active');
+
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // ========== 轮播核心逻辑 ==========
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-item');
+        let slideInterval = null;
+        const indicatorsContainer = document.querySelector('.indicators');
+
+        // 统一跳转方法
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            updateIndicators();
+            resetAutoPlay();
+        }
+
+        // 下一张
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        // 上一张
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // 更新指示器
+        function updateIndicators() {
+            const indicators = document.querySelectorAll('.indicator');
+            if (indicators.length > 0) {
+                indicators.forEach((indicator, i) => {
+                    indicator.classList.toggle('active', i === currentSlide);
+                });
+            }
+        }
+
+        // 动态生成指示器
+        function createIndicators() {
+            if (slides.length > 0 && indicatorsContainer) {
+                indicatorsContainer.innerHTML = '';
+                slides.forEach((_, index) => {
+                    const indicator = document.createElement('div');
+                    indicator.classList.add('indicator');
+                    if (index === currentSlide) indicator.classList.add('active');
+                    indicator.addEventListener('click', () => goToSlide(index));
+                    indicatorsContainer.appendChild(indicator);
+                });
+            }
+        }
+
+        // 自动播放控制
+        function startAutoPlay() {
+            if (slides.length > 0) {
+                if (slideInterval) clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+        }
+
+        function resetAutoPlay() {
+            startAutoPlay();
+        }
+
+        // 滚轮切换
+        function handleWheelScroll(e) {
+            if (slides.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                clearInterval(slideInterval);
+                const direction = Math.sign(e.deltaY);
+                direction > 0 ? nextSlide() : prevSlide();
+                resetAutoPlay();
+            }
+        }
+
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            if (slides.length > 0) {
+                if (e.key === 'ArrowLeft') prevSlide();
+                if (e.key === 'ArrowRight') nextSlide();
+            }
+        });
+
+        // 箭头按钮事件处理
+        function initArrows() {
+            const prevArrow = document.querySelector('.arrow.prev');
+            const nextArrow = document.querySelector('.arrow.next');
+
+            if (prevArrow && nextArrow && slides.length > 0) {
+                prevArrow.addEventListener('click', prevSlide);
+                nextArrow.addEventListener('click', nextSlide);
+            }
+        }
+
+        // ========== 初始化 ==========
+        function initSlider() {
+            createIndicators();
+            initArrows();
+            startAutoPlay();
+
+            // 为首页添加轮播事件
+            if (document.querySelector('.slider-container')) {
+                document.querySelector('.slider-container').addEventListener('wheel', handleWheelScroll);
+            }
+        }
+
+        // 页面加载后初始化轮播
+        window.addEventListener('load', initSlider);
+    </script>
+</body>
+</html>

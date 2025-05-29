@@ -1,0 +1,652 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>明日方舟-角色展示</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式 */
+        :root {
+            --primary-color: #f5a623;
+            --secondary-color: #4682B4;
+            --dark-bg: #0a1a2f;
+            --card-bg: rgba(30, 50, 80, 0.6);
+            --text-light: #ffffff;
+            --text-secondary: #a0c0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a1a2f 0%, #1a2b4f 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        /* 导航栏样式 */
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(0, 0, 0, 0.85);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+            .logo img:hover {
+                transform: scale(1.05);
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+            .nav-links a {
+                color: var(--text-light);
+                text-decoration: none;
+                font-size: 1.1rem;
+                font-weight: 500;
+                padding: 8px 12px;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+                .nav-links a:hover {
+                    color: var(--primary-color);
+                }
+
+                .nav-links a::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -5px;
+                    left: 0;
+                    width: 0;
+                    height: 2px;
+                    background: var(--primary-color);
+                    transition: width 0.3s ease;
+                }
+
+                .nav-links a:hover::after {
+                    width: 100%;
+                }
+
+            .nav-links li:first-child a {
+                color: var(--primary-color);
+            }
+
+        /* 轮播图核心样式 */
+        .slider-container {
+            position: relative;
+            margin-top: 90px;
+            height: 80vh;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin: 90px auto 0;
+            width: 95%;
+            max-width: 1600px;
+        }
+
+        .slider {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .slide-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            overflow: hidden;
+        }
+
+            .slide-item.active {
+                opacity: 1;
+                z-index: 2;
+            }
+
+            .slide-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                transition: transform 0.5s ease;
+            }
+
+            .slide-item.active img {
+                transform: scale(1.03);
+            }
+
+        /* 角色名称样式 */
+        .character-info {
+            position: absolute;
+            bottom: 60px;
+            right: 60px;
+            color: white;
+            text-align: right;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            max-width: 500px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+
+        .slide-item.active .character-info {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .character-info h2 {
+            font-size: 3.5rem;
+            margin: 0;
+            line-height: 1.1;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+        }
+
+        .character-info .en-name {
+            font-size: 1.8rem;
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .character-info .role {
+            font-size: 1.3rem;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: rgba(245, 166, 35, 0.2);
+            display: inline-block;
+            border-radius: 30px;
+        }
+
+        /* 指示器样式 */
+        .indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 300;
+        }
+
+        .indicator {
+            width: 14px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .indicator.active {
+                background: var(--primary-color);
+                transform: scale(1.3);
+                box-shadow: 0 0 10px rgba(245, 166, 35, 0.8);
+            }
+
+            .indicator:hover {
+                background: rgba(255, 255, 255, 0.8);
+                transform: scale(1.2);
+            }
+
+        /* 左右箭头样式 */
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+            .arrow:hover {
+                background: rgba(245, 166, 35, 0.8);
+                transform: translateY(-50%) scale(1.1);
+                opacity: 1 !important;
+            }
+
+        .slider-container:hover .arrow {
+            opacity: 0.7;
+        }
+
+        .arrow.prev {
+            left: 30px;
+        }
+
+        .arrow.next {
+            right: 30px;
+        }
+
+        /* 特色内容区域 */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 50px 5%;
+            flex-wrap: wrap;
+            max-width: 1600px;
+            margin: 40px auto;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+            .feature-card:hover {
+                transform: translateY(-15px);
+                background: rgba(40, 70, 110, 0.8);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            }
+
+            .feature-card i {
+                font-size: 3rem;
+                color: var(--primary-color);
+                margin-bottom: 20px;
+            }
+
+            .feature-card h3 {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+                color: var(--primary-color);
+            }
+
+            .feature-card p {
+                font-size: 1.1rem;
+                color: var(--text-secondary);
+            }
+
+        /* 页脚样式 */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+            footer p {
+                margin: 10px 0;
+            }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .slider-container {
+                height: 70vh;
+            }
+
+            .character-info h2 {
+                font-size: 2.8rem;
+            }
+
+            .character-info .en-name {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slider-container {
+                height: 60vh;
+                width: 97%;
+                margin-top: 80px;
+            }
+
+            .character-info {
+                bottom: 30px;
+                right: 30px;
+                padding: 15px;
+            }
+
+                .character-info h2 {
+                    font-size: 2.2rem;
+                }
+
+                .character-info .en-name {
+                    font-size: 1.2rem;
+                }
+
+                .character-info .role {
+                    font-size: 1rem;
+                    padding: 6px 12px;
+                }
+
+            .arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 22px;
+            }
+
+            .features {
+                padding: 30px 3%;
+            }
+
+            .feature-card {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+                .nav-links a {
+                    font-size: 0.95rem;
+                    padding: 6px 8px;
+                }
+        }
+
+        @media (max-width: 576px) {
+            .slider-container {
+                height: 50vh;
+            }
+
+            .character-info {
+                bottom: 20px;
+                right: 20px;
+                max-width: 80%;
+            }
+
+                .character-info h2 {
+                    font-size: 1.8rem;
+                }
+
+                .character-info .en-name {
+                    font-size: 1rem;
+                }
+
+            .indicators {
+                bottom: 15px;
+            }
+
+            .arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .logo img {
+                height: 40px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+            .feature-card:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+
+            .feature-card:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            .feature-card:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="main-nav">
+        <div class="logo">
+            <img src="https://via.placeholder.com/150x50/f5a623/0a1a2f?text=明日方舟" alt="明日方舟">
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="characters.html">角色</a></li>
+            <li><a href="news.html">资讯</a></li>
+            <li><a href="download.html">下载</a></li>
+        </ul>
+    </nav>
+
+    <!-- 轮播图 -->
+    <div class="slider-container">
+        <div class="slider">
+            <!-- 第一张轮播图 -->
+            <div class="slide-item active">
+                <img src="https://images.unsplash.com/photo-1635805737707-575885ab0820?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="纯烬艾雅法拉">
+                <div class="character-info">
+                    <h2>纯烬艾雅法拉</h2>
+                    <div class="en-name">Pure Ember Eyja</div>
+                    <div class="role">术师干员</div>
+                </div>
+            </div>
+
+            <!-- 第二张轮播图 -->
+            <div class="slide-item">
+                <img src="https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="焰影苇草">
+                <div class="character-info">
+                    <h2>焰影苇草</h2>
+                    <div class="en-name">Flame Shadow Reed</div>
+                    <div class="role">近卫干员</div>
+                </div>
+            </div>
+
+            <!-- 第三张轮播图 -->
+            <div class="slide-item">
+                <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="Mon3tr">
+                <div class="character-info">
+                    <h2>Mon3tr</h2>
+                    <div class="en-name">Mon3tr Core Unit</div>
+                    <div class="role">召唤单位</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="indicators"></div>
+        <button class="arrow prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="arrow next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- 特色内容 -->
+    <section class="features">
+        <div class="feature-card">
+            <i class="fas fa-users"></i>
+            <h3>干员档案</h3>
+            <p>探索每一位干员的背景故事、技能特点和战斗定位</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-fist-raised"></i>
+            <h3>战斗演示</h3>
+            <p>观看干员实战视频，了解他们的独特技能和战术运用</p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-book"></i>
+            <h3>背景故事</h3>
+            <p>深入了解泰拉世界的宏大叙事和干员们的个人经历</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>明日方舟 - 重铸未来，方舟启航</p>
+        <p>© 2023 Hypergryph Network Technology Co., Ltd. All Rights Reserved.</p>
+        <p>本网站为粉丝作品，与官方无关</p>
+    </footer>
+
+    <script>
+        // ========== 轮播核心逻辑 ==========
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-item');
+        let slideInterval = null;
+        const indicatorsContainer = document.querySelector('.indicators');
+
+        // ========== 功能函数 ==========
+        // 统一跳转方法
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            updateIndicators();
+            resetAutoPlay();
+        }
+
+        // 下一张
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        // 上一张
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // 更新指示器
+        function updateIndicators() {
+            document.querySelectorAll('.indicator').forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        // 动态生成指示器
+        function createIndicators() {
+            slides.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (index === currentSlide) indicator.classList.add('active');
+                indicator.addEventListener('click', () => goToSlide(index));
+                indicatorsContainer.appendChild(indicator);
+            });
+        }
+
+        // ========== 自动播放控制 ==========
+        function startAutoPlay() {
+            if (slideInterval) clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function resetAutoPlay() {
+            startAutoPlay();
+        }
+
+        // ========== 事件处理 ==========
+        // 滚轮切换
+        function handleWheelScroll(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            clearInterval(slideInterval);
+            const direction = Math.sign(e.deltaY);
+            direction > 0 ? nextSlide() : prevSlide();
+            resetAutoPlay();
+        }
+
+        // 导航栏透明度
+        let isScrolling = false;
+        window.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                requestAnimationFrame(() => {
+                    const nav = document.querySelector('.main-nav');
+                    if (window.scrollY > 100) {
+                        nav.style.background = 'rgba(0, 0, 0, 0.95)';
+                    } else {
+                        nav.style.background = 'rgba(0, 0, 0, 0.85)';
+                    }
+                    isScrolling = false;
+                });
+            }
+            isScrolling = true;
+        });
+
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // 箭头按钮事件处理
+        function initArrows() {
+            const prevArrow = document.querySelector('.arrow.prev');
+            const nextArrow = document.querySelector('.arrow.next');
+
+            if (prevArrow && nextArrow) {
+                prevArrow.addEventListener('click', prevSlide);
+                nextArrow.addEventListener('click', nextSlide);
+            }
+        }
+
+        // ========== 初始化 ==========
+        function initSlider() {
+            createIndicators();
+            initArrows();
+            startAutoPlay();
+        }
+
+        // 绑定事件并初始化
+        document.querySelector('.slider-container').addEventListener('wheel', handleWheelScroll);
+        window.addEventListener('load', initSlider);
+    </script>
+</body>
+</html>
